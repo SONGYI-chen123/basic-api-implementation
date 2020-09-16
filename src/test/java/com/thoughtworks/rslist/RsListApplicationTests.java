@@ -1,5 +1,8 @@
 package com.thoughtworks.rslist;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -18,10 +21,8 @@ import javax.websocket.server.PathParam;
 import java.awt.*;
 import java.util.*;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
 
-
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,10 +42,13 @@ public class RsListApplicationTests {
                 andExpect(jsonPath("$",hasSize(3))).
                 andExpect(jsonPath("$[0].eventName",is("第一条事件"))).
                 andExpect(jsonPath("$[0].keyWord",is("无标签"))).
+                andExpect(jsonPath("$[0]",not(hasKey("user")))).
                 andExpect(jsonPath("$[1].eventName",is("第二条事件"))).
                 andExpect(jsonPath("$[1].keyWord",is("无标签"))).
+                andExpect(jsonPath("$[1]",not(hasKey("user")))).
                 andExpect(jsonPath("$[2].eventName",is("第三条事件"))).
                 andExpect(jsonPath("$[2].keyWord",is("无标签"))).
+                andExpect(jsonPath("$[2]",not(hasKey("user")))).
                 andExpect(status().isOk());
 
     }
@@ -97,9 +101,13 @@ public class RsListApplicationTests {
     @Test
     @Order(4)
     public void should_add_rs_event() throws Exception{
-        String jsonString = "{\"eventName\":\"猪肉涨价了\",\"keyWord\":\"经济\"}";
+        User user = new User("yichen","female",18,"1577660501@163.com","15178945858");
+        RsEvent rsEvent = new RsEvent("猪肉涨价了","经济",user);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+
         mockmvc.perform(post("/rs/event").content(jsonString).contentType(MediaType.APPLICATION_JSON)).
-                andExpect(status().isOk());
+                andExpect(status().isCreated());
         mockmvc.perform(get("/rs/list")).
                 andExpect(jsonPath("$", hasSize(4))).
                 andExpect(jsonPath("$[0].eventName", is("第一条事件"))).
