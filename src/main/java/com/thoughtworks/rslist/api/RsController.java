@@ -2,9 +2,12 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+import com.thoughtworks.rslist.api.UserController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +15,7 @@ import java.util.List;
 
 @RestController
 public class RsController {
+  UserController userController = new UserController();
   private List<RsEvent> rsList = initRsEventList();
 
   private List<RsEvent>initRsEventList(){
@@ -22,6 +26,7 @@ public class RsController {
     rsEventList.add(new RsEvent("第三条事件","无标签",user));
     return rsEventList;
   }
+
   @GetMapping("/rs/{index}")
   public ResponseEntity getOneRsEvent(@PathVariable int index){
     return ResponseEntity.ok(rsList.get(index-1));
@@ -37,8 +42,14 @@ public class RsController {
 
   @PostMapping("/rs/event")
   public ResponseEntity addRsEvent(@RequestBody RsEvent rsEvent){
-    rsList.add(rsEvent);
-    return ResponseEntity.created(null).build();
+    for(int i=0;i<userController.userList.size();i++){
+      if(!(userController.userList.get(i).getName().equals(rsEvent.getUser().getName()))){
+        userController.userList.add(rsEvent.getUser());
+      }
+    }
+        rsList.add(rsEvent);
+      return ResponseEntity.created(null).build();
+
   }
 
   @PatchMapping("/rs/Mevent/{index}")

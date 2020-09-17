@@ -101,7 +101,9 @@ public class RsListApplicationTests {
     @Test
     @Order(4)
     public void should_add_rs_event() throws Exception{
-        User user = new User("yichen","female",18,"1577660501@163.com","15178945858");
+
+        User user = new User("yichen","female",18,"1577660501@163.com","15179945008");
+
         RsEvent rsEvent = new RsEvent("猪肉涨价了","经济",user);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(rsEvent);

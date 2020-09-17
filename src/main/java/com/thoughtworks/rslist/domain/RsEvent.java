@@ -14,11 +14,11 @@ public class RsEvent {
         this.user = user;
     }
 
-    @JsonIgnore
+
     public User getUser() {
         return user;
     }
-    @JsonProperty
+
     public void setUser(User user) {
         this.user = user;
     }
