@@ -33,15 +33,16 @@ public class UserControllerTest {
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(header().string("index","3"))
+                .andExpect(status().isCreated());
 
         mockMvc.perform(get("/user"))
                 .andExpect(jsonPath("$",hasSize(1)))
-                .andExpect(jsonPath("$[0].name",is("yichen")))
-                .andExpect(jsonPath("$[0].gender",is("female")))
-                .andExpect(jsonPath("$[0].age",is(18)))
-                .andExpect(jsonPath("$[0].email",is("1577660501@163.com")))
-                .andExpect(jsonPath("$[0].phone",is("15178945858")))
+                .andExpect(jsonPath("$.name",is("yichen")))
+                .andExpect(jsonPath("$.gender",is("female")))
+                .andExpect(jsonPath("$.age",is(18)))
+                .andExpect(jsonPath("$.email",is("1577660501@163.com")))
+                .andExpect(jsonPath("$.phone",is("15178945858")))
                 .andExpect(status().isOk());
     }
 
@@ -63,7 +64,7 @@ public class UserControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = objectMapper.writeValueAsString(user);
 
-        mockMvc.perform(post("user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
