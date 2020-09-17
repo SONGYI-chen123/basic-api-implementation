@@ -1,7 +1,9 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
+import com.thoughtworks.rslist.api.UserController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,15 +11,18 @@ import java.util.List;
 
 @RestController
 public class RsController {
+  UserController userController = new UserController();
   private List<RsEvent> rsList = initRsEventList();
 
   private List<RsEvent>initRsEventList(){
     List<RsEvent> rsEventList = new ArrayList<>();
-    rsEventList.add(new RsEvent("第一条事件","无标签"));
-    rsEventList.add(new RsEvent("第二条事件","无标签"));
-    rsEventList.add(new RsEvent("第三条事件","无标签"));
+    User user = new User("yichen","female",18,"1577660501@163.com","151789458");
+    rsEventList.add(new RsEvent("第一条事件","无标签",user));
+    rsEventList.add(new RsEvent("第二条事件","无标签",user));
+    rsEventList.add(new RsEvent("第三条事件","无标签",user));
     return rsEventList;
   }
+
   @GetMapping("/rs/{index}")
   public RsEvent getOneRsEvent(@PathVariable int index){
     return rsList.get(index-1);
@@ -33,7 +38,13 @@ public class RsController {
 
   @PostMapping("/rs/event")
   public void addRsEvent(@RequestBody RsEvent rsEvent){
-    rsList.add(rsEvent);
+    for(int i=0;i<userController.userList.size();i++){
+      if(!(userController.userList.get(i).getName().equals(rsEvent.getUser().getName()))){
+        userController.userList.add(rsEvent.getUser());
+      }
+    }
+        rsList.add(rsEvent);
+
   }
 
   @PatchMapping("/rs/Mevent/{index}")
