@@ -13,8 +13,8 @@ public class RsEventHandler {
     public ResponseEntity rsExceptionHandler(Exception e){
         String errorMessage;
         if(e instanceof MethodArgumentNotValidException){
-            errorMessage = "invalid param";
-        }else{
+            errorMessage ="invalid param";
+        }else {
             errorMessage = e.getMessage();
         }
         Error error = new Error();
