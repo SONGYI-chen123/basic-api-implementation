@@ -57,6 +57,11 @@ public class UserControllerTest {
     }
 
     @Test
+    public void should_delete_user_by_Id() throws Exception{
+        mockMvc.perform(delete("/user/1")).andExpect(status().isOk());
+    }
+
+    @Test
     @Order(2)
     public void name_should_less_than_8() throws Exception{
         User user = new User("yichen1234","female",18,"1577660501@163.com","15178945858");

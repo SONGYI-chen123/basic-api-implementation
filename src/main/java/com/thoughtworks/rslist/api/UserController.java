@@ -38,9 +38,16 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity getUserList(@PathVariable int id){
+    public ResponseEntity getUser(@PathVariable int id){
         Optional<UserPo> userPo = userRepository.findById(id);
 
         return ResponseEntity.ok(userPo);
+    }
+
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity deleteUser(@PathVariable int id){
+        userRepository.deleteById(id);
+        return  ResponseEntity.created(null).build();
+
     }
 }
