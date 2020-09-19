@@ -3,6 +3,7 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.po.UserPo;
 import com.thoughtworks.rslist.repository.UserRepository;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +21,6 @@ public class UserController {
 
 
     public static List<User> userList = new ArrayList<>();
-
-
 
 
     @PostMapping("/user")
@@ -47,7 +46,9 @@ public class UserController {
     @DeleteMapping("/user/{id}")
     public ResponseEntity deleteUser(@PathVariable int id){
         userRepository.deleteById(id);
-        return  ResponseEntity.created(null).build();
 
+        return ResponseEntity.created(null).build();
     }
+
+
 }

@@ -1,16 +1,20 @@
 package com.thoughtworks.rslist.po;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "user")
-@Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserPo {
     @Id
     @GeneratedValue
@@ -22,6 +26,14 @@ public class UserPo {
     private String email;
     private String phone;
     private int voteNum = 10;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

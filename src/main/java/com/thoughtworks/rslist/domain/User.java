@@ -1,9 +1,12 @@
 package com.thoughtworks.rslist.domain;
 
 import com.sun.istack.NotNull;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 
+@NoArgsConstructor
 public class User {
     @NotNull
     @Size(max = 8)
