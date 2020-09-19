@@ -53,13 +53,20 @@ public class RsController {
   @GetMapping("/rs/list")
   public ResponseEntity getRsEventBetween(@RequestParam  (required = false)Integer start, @RequestParam(required = false)Integer end){
     List<RsEventPo> rsEventPos = rsEventRepository.findAll();
+    List<RsEvent> rsEvents = new ArrayList<>();
     if(start == null || end == null){
-      return ResponseEntity.ok(rsEventPos);
+      for(int i=0;i<rsEventPos.size();i++) {
+        rsEvents.add(new RsEvent(rsEventPos.get(i).getEventName(),rsEventPos.get(i).getKeyWord(),rsEventPos.get(i).getId(),rsEventPos.get(i).getVoteNum()));
+      }
+      return ResponseEntity.ok(rsEvents);
     }
     if(start<=0|| end > rsEventPos.size()){
       throw new RsEventNotValidException("invalid request param");
     }
-    return ResponseEntity.ok(rsEventPos.subList(start-1,end));
+    for(int i=start-1;i<end;i++){
+      rsEvents.add(new RsEvent(rsEventPos.get(i).getEventName(),rsEventPos.get(i).getKeyWord(),rsEventPos.get(i).getId(),rsEventPos.get(i).getVoteNum()));
+    }
+    return ResponseEntity.ok(rsEvents);
   }
 
   @PostMapping("/rs/event")
