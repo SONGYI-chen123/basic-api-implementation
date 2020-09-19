@@ -78,8 +78,10 @@ public class RsController {
   public ResponseEntity patchRsEvent(@RequestBody RsEvent rsEvent,@PathVariable int rsEventId){
      Optional<RsEventPo> rsEventPo = rsEventRepository.findById(rsEventId);
       if(rsEventPo.get().getUserPo().getId() == rsEvent.getUserId()){
-      rsEventPo.get().setKeyWord(rsEvent.getKeyWord());
-      rsEventPo.get().setEventName(rsEvent.getEventName());
+        if(!rsEvent.getKeyWord().equals("null")){
+            rsEventPo.get().setKeyWord(rsEvent.getKeyWord());}
+        if (!rsEvent.getEventName().equals("null")){
+            rsEventPo.get().setEventName(rsEvent.getEventName());}
       return ResponseEntity.ok(rsEventPo);
     }else {
         return ResponseEntity.badRequest().build();

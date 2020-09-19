@@ -171,5 +171,5 @@ public class RsListApplicationTests {
         mockmvc.perform(patch("/rs/rsEventId").content(jsonString).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
-    
+
 }
