@@ -172,4 +172,13 @@ public class RsListApplicationTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    public void should_return_400_when_id_not_match_userId() throws Exception{
+        RsEvent rsEvent = new RsEvent("事件5","政治",20);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = objectMapper.writeValueAsString(rsEvent);
+        mockmvc.perform(patch("/rs/1").content(jsonString).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
 }
