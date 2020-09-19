@@ -1,7 +1,6 @@
 package com.thoughtworks.rslist.repository;
 
 import com.thoughtworks.rslist.po.RsEventPo;
-import com.thoughtworks.rslist.po.UserPo;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
