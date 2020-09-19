@@ -9,6 +9,7 @@ import org.apache.tomcat.jni.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -82,4 +83,7 @@ public class UserPo {
     public void setVoteNum(int voteNum) {
         this.voteNum = voteNum;
     }
+
+    @OneToMany(cascade = CascadeType.REMOVE,mappedBy = "userPo")
+    private List<RsEventPo> rsEventPos;
 }

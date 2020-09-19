@@ -28,6 +28,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class RsController {
@@ -37,25 +38,16 @@ public class RsController {
   @Autowired
   UserRepository userRepository;
 
-  private static void createTableByJdbc() throws SQLException {
-
-    Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/rsSystem","root","123456");
-
-    DatabaseMetaData metaData = connection.getMetaData();
-    ResultSet resultSet = metaData.getTables(null,null,"rsEvent",null);
-    if(!resultSet.next()){
-      String createTableSql = "create table reEvent(eventName varchar(200) not null,keyWord varchar(100) not null)";
-      Statement statement = connection.createStatement();
-      statement.execute(createTableSql);
-    }
-    connection.close();
-  }
 
 
   @GetMapping("/rs/{id}")
   public ResponseEntity getOneRsEvent(@PathVariable int id){
 
-    return ResponseEntity.ok(rsEventRepository.findById(id));
+    if(id<=0){
+      throw new RsEventNotValidException("invalid index");
+    }else {
+      return ResponseEntity.ok(rsEventRepository.findById(id));
+    }
   }
 
   @GetMapping("/rs/list")
@@ -65,20 +57,33 @@ public class RsController {
       return ResponseEntity.ok(rsEventPos);
     }
     if(start<=0|| end > rsEventPos.size()){
-      throw new RsEventNotValidException(("invalid request param"));
+      throw new RsEventNotValidException("invalid request param");
     }
     return ResponseEntity.ok(rsEventPos.subList(start-1,end));
   }
 
   @PostMapping("/rs/event")
   public ResponseEntity addRsEvent(@RequestBody RsEvent rsEvent) {
-    if(!userRepository.findById(rsEvent.getUserId()).isPresent()){
+    Optional<UserPo> userPo = userRepository.findById(rsEvent.getUserId());
+    if(!userPo.isPresent()){
       return ResponseEntity.badRequest().build();
     }else{
-     RsEventPo rsEventPo = RsEventPo.builder().keyWord(rsEvent.getKeyWord()).eventName(rsEvent.getEventName()).userId(rsEvent.getUserId()).build();
+     RsEventPo rsEventPo = RsEventPo.builder().keyWord(rsEvent.getKeyWord()).eventName(rsEvent.getEventName()).userPo(userPo.get()).build();
      rsEventRepository.save(rsEventPo);
-      return ResponseEntity.created(null).build();}
+     return ResponseEntity.created(null).build();}
 
+  }
+
+  @PatchMapping("rs/{rsEventId}")
+  public ResponseEntity patchRsEvent(@RequestBody RsEvent rsEvent,@PathVariable int rsEventId){
+     Optional<RsEventPo> rsEventPo = rsEventRepository.findById(rsEventId);
+      if(rsEventPo.get().getUserPo().getId() == rsEvent.getUserId()){
+      rsEventPo.get().setKeyWord(rsEvent.getKeyWord());
+      rsEventPo.get().setEventName(rsEvent.getEventName());
+      return ResponseEntity.ok(rsEventPo);
+    }else {
+        return ResponseEntity.badRequest().build();
+      }
   }
 
 

@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -23,5 +20,14 @@ public class RsEventPo {
     int id;
     String eventName;
     String keyWord;
-    int userId;
+    @ManyToOne
+    UserPo userPo;
+
+    public UserPo getUserPo() {
+        return userPo;
+    }
+
+    public void setUserPo(UserPo userPo) {
+        this.userPo = userPo;
+    }
 }

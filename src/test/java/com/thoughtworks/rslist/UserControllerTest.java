@@ -2,6 +2,7 @@ package com.thoughtworks.rslist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.po.RsEventPo;
 import com.thoughtworks.rslist.po.UserPo;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
@@ -38,6 +39,14 @@ public class UserControllerTest {
     public void setup(){
         userRepository.deleteAll();
         rsEventRepository.deleteAll();
+        UserPo userPo = UserPo.builder().name("xiaoyi").gender("male").age(19).email("123@qq.com").phone("10000000000").voteNum(10).build();
+        userRepository.save(userPo);
+        UserPo userPo1 = UserPo.builder().name("xiaoer").gender("male").age(20).email("123@qq.com").phone("10000000001").voteNum(10).build();
+        userRepository.save(userPo1);
+        RsEventPo rsEventPo = RsEventPo.builder().eventName("事件1").keyWord("无标签").userPo(userPo).build();
+        rsEventRepository.save(rsEventPo);
+        RsEventPo rsEventPo1 = RsEventPo.builder().eventName("事件2").keyWord("无标签").userPo(userPo1).build();
+        rsEventRepository.save(rsEventPo1);
     }
 
     @Test
@@ -48,7 +57,7 @@ public class UserControllerTest {
         String jsonString = objectMapper.writeValueAsString(user);
 
         mockMvc.perform(post("/user").content(jsonString).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         List<UserPo> all = userRepository.findAll();
         assertEquals(1,all.size());
@@ -58,17 +67,19 @@ public class UserControllerTest {
     }
 
     @Test
+    @Order(2)
     public void should_get_user_by_Id() throws Exception{
         mockMvc.perform(get("/user/1")).andExpect(status().isOk());
     }
 
     @Test
+    @Order(3)
     public void should_delete_user_by_Id() throws Exception{
-        mockMvc.perform(delete("/user/1")).andExpect(status().isOk());
+        mockMvc.perform(delete("/user/1")).andExpect(status().isCreated());
     }
 
     @Test
-    @Order(2)
+    @Order(4)
     public void name_should_less_than_8() throws Exception{
         User user = new User("yichen1234","female",18,"1577660501@163.com","15178945858");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -79,7 +90,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @Order(3)
+    @Order(5)
     public void age_should_between_18_and_100() throws Exception{
         User user = new User("yichen","female",15,"1577660501@163.com","15178945858");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -90,7 +101,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @Order(4)
+    @Order(6)
     public void email_should_suit_format() throws Exception{
         User user = new User("yichen","female",18,"1577660501","15178945858");
         ObjectMapper objectMapper = new ObjectMapper();
@@ -101,7 +112,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @Order(5)
+    @Order(7)
     public void phone_should_suit_format() throws Exception{
         User user = new User("yichen","female",18,"1577660501@163.com","151789458");
         ObjectMapper objectMapper = new ObjectMapper();
