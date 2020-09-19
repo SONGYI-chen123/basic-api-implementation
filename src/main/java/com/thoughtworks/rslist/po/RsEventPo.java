@@ -25,7 +25,7 @@ public class RsEventPo {
     @ManyToOne
     UserPo userPo;
     @OneToMany(cascade = CascadeType.REMOVE , mappedBy = "rsEvent")
-    private List<VotePo> votePOS;
+    private List<VotePo> votePos;
 
     public UserPo getUserPo() {
         return userPo;
