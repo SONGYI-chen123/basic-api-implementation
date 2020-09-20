@@ -16,27 +16,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Configuration
 public class RsService {
     UserRepository userRepository;
     RsEventRepository rsEventRepository;
     VoteRepository voteRepository;
-    @Bean
-    public void setUserRepository(UserRepository userRepository){
+
+    public RsService(UserRepository userRepository,RsEventRepository rsEventRepository,VoteRepository voteRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Bean
-    public void setRsEventRepository(RsEventRepository rsEventRepository){
         this.rsEventRepository = rsEventRepository;
-    }
-
-
-    @Bean
-    public void setVoteRepository(VoteRepository voteRepository){
         this.voteRepository = voteRepository;
     }
-
-
-
 }
