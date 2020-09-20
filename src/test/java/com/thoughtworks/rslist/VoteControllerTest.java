@@ -128,7 +128,7 @@ public class VoteControllerTest {
 
     @Test
     @Order(1)
-    public void should_get_VoteRecord_from_startvoteTime_to_endvoteTime() throws Exception {
+    public void should_get_VoteRecord_from_startVoteTime_to_endVoteTime() throws Exception {
         VotePo votePo = VotePo.builder().userPo(userPo).voteTime(LocalDateTime.now()).rsEventPo(rsEventPo).voteNum(5).build();
         voteRepository.save(votePo);
         mockMvc.perform(get("/findByTime")
