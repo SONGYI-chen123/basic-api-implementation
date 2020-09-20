@@ -27,11 +27,5 @@ public class RsEventPo {
     @OneToMany(cascade = CascadeType.REMOVE , mappedBy = "rsEvent")
     private List<VotePo> votePos;
 
-    public UserPo getUserPo() {
-        return userPo;
-    }
 
-    public void setUserPo(UserPo userPo) {
-        this.userPo = userPo;
-    }
 }

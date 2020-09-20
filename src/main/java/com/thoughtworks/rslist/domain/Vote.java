@@ -15,5 +15,6 @@ public class Vote {
     private int voteNum;
     private LocalDateTime voteTime;
     private int userId;
+    private int rsEventId;
 
 }
