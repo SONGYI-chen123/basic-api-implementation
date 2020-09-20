@@ -9,6 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.rsocket.RSocketRequesterAutoConfiguration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.thoughtworks.rslist.exception.Error;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
@@ -30,6 +35,7 @@ public class UserController {
 
     @PostMapping("/user")
     public ResponseEntity addUser(@RequestBody @Valid User user){
+
         UserPo userPo = new UserPo();
         userPo.setName(user.getName());
         userPo.setGender(user.getGender());
@@ -55,5 +61,12 @@ public class UserController {
         return ResponseEntity.created(null).build();
     }
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity userExceptionHandler(MethodArgumentNotValidException e){
+        Error error = new Error();
+        error.setError("invalid user");
+        return ResponseEntity.badRequest().body(error);
+    }
 
 }
